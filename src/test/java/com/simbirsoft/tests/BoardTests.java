@@ -1,11 +1,10 @@
 package com.simbirsoft.tests;
 
-import com.github.javafaker.Faker;
-import com.simbirsoft.models.Board;
 import com.simbirsoft.models.Label;
 import com.simbirsoft.models.Member;
-import com.simbirsoft.steps.StepService;
-import org.json.simple.JSONObject;
+import io.qameta.allure.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -13,16 +12,16 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
-import static com.simbirsoft.specs.Specs.request;
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.request;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
-
+@Story("Добавление, изменение, удаление элементов доски в рабочем пространстве")
+@Tag("Board")
 public class BoardTests extends TestBase {
 
     @ValueSource(strings = {"blue", "orange", "green", "red", "purple", "pink", "lime", "sky", "grey"})
-    @ParameterizedTest(name = "Проверка изменения цвета доски на {0}")
+    @ParameterizedTest(name = "{0}")
+    @DisplayName("Проверка изменения цвета доски на: ")
+    @Feature("Изменение параметров доски")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.NORMAL)
     void changeDefaultColorOfBoard(String color) {
         stepService.changeAndCheckBoardColor(board, color);
     }
@@ -32,7 +31,11 @@ public class BoardTests extends TestBase {
             "secondLabel, green",
             "thirdLabel, red"
     })
-    @ParameterizedTest(name = "Проверка создания лэйбла для доски с названием и цветом: {0}")
+    @ParameterizedTest(name = "{0}")
+    @DisplayName("Проверка создания лэйбла для доски с названием и цветом: ")
+    @Feature("Изменение параметров доски")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.NORMAL)
     void createAndGetLabelOnBoard(String title, String color) {
         Label label = stepService.createLabelOnBoard(board, title, color);
 
@@ -40,6 +43,10 @@ public class BoardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание списка на доске и получение его данных в общем списке")
+    @Feature("Добавление элементов доски")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.NORMAL)
     void createAndGetListOnBoard() {
         String name = faker.name().title();
 
@@ -49,6 +56,10 @@ public class BoardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Добавление пользователя к доске и получение его данных в общем списке")
+    @Feature("Добавление пользователей доски")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.CRITICAL)
     void addAndGetMemberOfBoard() {
         String email = faker.internet().emailAddress();
         String name = faker.name().fullName();

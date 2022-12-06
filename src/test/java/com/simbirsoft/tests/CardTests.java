@@ -3,7 +3,10 @@ package com.simbirsoft.tests;
 import com.simbirsoft.models.Card;
 import com.simbirsoft.models.CheckItem;
 import com.simbirsoft.models.CheckList;
+import io.qameta.allure.*;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,6 +16,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Story("Добавление, изменение данных карточки и ее элементов")
+@Tag("Card")
 public class CardTests extends TestBase {
 
     @BeforeAll
@@ -29,6 +34,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Изменение названия карточки")
+    @Feature("Добавление и изменение карточек в доске")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.CRITICAL)
     void changeNameOfCard() {
         String name = faker.funnyName().name();
 
@@ -38,6 +47,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Изменение описания карточки")
+    @Feature("Добавление и изменение карточек в доске")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.NORMAL)
     void changeDescriptionOfCard() {
         String desc = faker.harryPotter().quote();
 
@@ -47,6 +60,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание чек-листа и проверка его наличия в общем списке")
+    @Feature("Добавление и изменение чек-листов и его элементов в карточке")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.CRITICAL)
     void createChecklistAndGetIdInCard() {
         String name = faker.funnyName().name();
 
@@ -58,6 +75,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Создание пункта в чек-листе и проверка его наличия в чек-листе")
+    @Feature("Добавление и изменение чек-листов и его элементов в карточке")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.CRITICAL)
     void createCheckItemInChecklist() {
         String name = faker.funnyName().name();
 
@@ -73,6 +94,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Перевод всех элементов чек-листа в статус Выполнено")
+    @Feature("Добавление и изменение чек-листов и его элементов в карточке")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.NORMAL)
     void markAllCheckItemsAsCompleteInChecklist() {
         String name = faker.funnyName().name();
         List<CheckItem> checkItems = new ArrayList<>();
@@ -91,6 +116,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Удаление элемента из чек-листа")
+    @Feature("Добавление и изменение чек-листов и его элементов в карточке")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.CRITICAL)
     void deleteCheckItemFromChecklist() {
         String name = faker.funnyName().name();
 
@@ -107,6 +136,10 @@ public class CardTests extends TestBase {
     }
 
     @Test
+    @DisplayName("Добавление, изменение, удаление комментария в карточке")
+    @Feature("Добавление и изменение карточек в доске")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.MINOR)
     void addNewCommentToCardThenUpdateAndDelete() {
         String text = faker.backToTheFuture().quote();
 
@@ -124,7 +157,11 @@ public class CardTests extends TestBase {
     }
 
     @ValueSource(strings = {"Нужно сделать", "В процессе", "Готово"})
-    @ParameterizedTest(name = "Проверка изменения статуса карточки на доски на: {0}")
+    @ParameterizedTest(name = "{0}")
+    @DisplayName("Проверка изменения статуса карточки на доски на: ")
+    @Feature("Добавление и изменение карточек в доске")
+    @Owner("Alexander Dankov")
+    @Severity(SeverityLevel.CRITICAL)
     void moveCardByStandardWorkFlowOnBoard(String status) {
         String statusId = stepService.getIdOfBoardListByName(board, status);
 

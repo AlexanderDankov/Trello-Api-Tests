@@ -18,16 +18,12 @@ public class TestBase {
     protected static Card card = new Card();
 
     @BeforeAll
-    static void createBoardAndCard() {
-
-
+    static void createBoard() {
         board = stepService.createBoard();
 
         List<Board> boardsList = stepService.getBoardsList();
 
         assertThat(boardsList).contains(board);
-
-
     }
 
     @AfterAll
