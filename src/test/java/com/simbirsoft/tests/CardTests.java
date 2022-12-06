@@ -1,6 +1,8 @@
 package com.simbirsoft.tests;
 
-import com.simbirsoft.models.*;
+import com.simbirsoft.models.Card;
+import com.simbirsoft.models.CheckItem;
+import com.simbirsoft.models.CheckList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,10 +10,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 
 public class CardTests extends TestBase {
 

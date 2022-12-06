@@ -7,15 +7,16 @@ import org.json.simple.JSONObject;
 
 import java.util.List;
 
-import static com.simbirsoft.specs.Specs.request;
+import static com.simbirsoft.specs.Specs.*;
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.*;
 
 public class StepService {
 
     public static Faker faker = new Faker();
 
-    private static final String organisationId = "6384fc3c621f81001c8068fa";
+    private static final String organisationId = credentials.organisationId();
 
     /**
      * Создание доски со случайным названием в указанно рабочем пространстве
@@ -35,7 +36,8 @@ public class StepService {
                 .post("boards/")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
+                .body(matchesJsonSchemaInClasspath("schemas/createBoardSchema.json"))
                 .extract().body().as(Board.class);
     }
 
@@ -50,7 +52,7 @@ public class StepService {
                 .when()
                 .get("organizations/" + organisationId + "/boards")
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .extract().jsonPath().getList("", Board.class);
     }
 
@@ -66,7 +68,7 @@ public class StepService {
                 .delete("boards/" + board.getId())
                 .then()
                 .log().body()
-                .statusCode(200);
+                .spec(response);
     }
 
     /**
@@ -83,7 +85,7 @@ public class StepService {
                 .put("boards/" + board.getId())
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .body("prefs.background", is(color));
     }
 
@@ -104,7 +106,7 @@ public class StepService {
                 .post("boards/" + board.getId() + "/labels")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(Label.class);
     }
 
@@ -119,7 +121,8 @@ public class StepService {
                 .when()
                 .get("labels/" + label.getId())
                 .then()
-                .statusCode(200)
+                .log().body()
+                .spec(response)
                 .body("id", is(label.getId()))
                 .body("idBoard", is(label.getIdBoard()))
                 .body("name", is(label.getName()))
@@ -140,7 +143,8 @@ public class StepService {
                 .when()
                 .post("boards/" + board.getId() + "/lists")
                 .then()
-                .statusCode(200)
+                .log().body()
+                .spec(response)
                 .body("name", is(name))
                 .extract()
                 .path("id");
@@ -158,7 +162,7 @@ public class StepService {
                 .when()
                 .get("boards/" + board.getId() + "/lists")
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .body("findAll{it}.id.flatten()", hasItem(listId));
     }
 
@@ -182,7 +186,7 @@ public class StepService {
                 .put("boards/" + board.getId() + "/members")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .extract().jsonPath().getList("members", Member.class);
     }
 
@@ -211,7 +215,7 @@ public class StepService {
                 .when()
                 .get("members/" + member.getId())
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .body("id", is(member.getId()))
                 .body("fullName", is(member.getFullName()))
                 .body("confirmed", is(false))
@@ -231,7 +235,7 @@ public class StepService {
                 .when()
                 .get("boards/" + board.getId() + "/lists")
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .extract().jsonPath().getList("", BoardList.class);
 
         return boardsList.stream()
@@ -257,7 +261,8 @@ public class StepService {
                 .post("cards")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
+                .body(matchesJsonSchemaInClasspath("schemas/createCardSchema.json"))
                 .extract().body().as(Card.class);
     }
 
@@ -273,8 +278,8 @@ public class StepService {
                 .when()
                 .get("boards/" + board.getId() + "/cards")
                 .then()
-                .statusCode(200)
                 .log().body()
+                .spec(response)
                 .extract().jsonPath().getList("", Card.class);
     }
 
@@ -291,7 +296,7 @@ public class StepService {
                 .get("cards/" + card.getId())
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(Card.class);
     }
 
@@ -311,7 +316,7 @@ public class StepService {
                 .put("cards/" + card.getId())
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(Card.class);
     }
 
@@ -330,7 +335,7 @@ public class StepService {
                 .post("cards/" + card.getId() + "/checklists")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(CheckList.class);
     }
 
@@ -349,7 +354,7 @@ public class StepService {
                 .post("checklists/" + checkList.getId() + "/checkitems")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .body("name", is(name))
                 .extract().body().as(CheckItem.class);
     }
@@ -365,7 +370,7 @@ public class StepService {
                 .when()
                 .get("checklists/" + checkList.getId())
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(CheckList.class);
     }
 
@@ -383,7 +388,7 @@ public class StepService {
                 .when()
                 .put("cards/" + card.getId() + "/checklist/" + checkItem.getIdChecklist() + "/checkitem/" + checkItem.getId())
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(CheckItem.class);
     }
 
@@ -398,7 +403,7 @@ public class StepService {
                 .when()
                 .delete("checklists/" + checkItem.getIdChecklist() + "/checkitems/" + checkItem.getId())
                 .then()
-                .statusCode(200);
+                .spec(response);
     }
 
     /**
@@ -416,7 +421,7 @@ public class StepService {
                 .post("cards/" + card.getId() + "/actions/comments")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .body("data.text", is(text))
                 .extract()
                 .path("id");
@@ -434,7 +439,7 @@ public class StepService {
                 .when()
                 .get("cards/" + card.getId())
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .extract()
                 .path("badges.comments");
     }
@@ -453,7 +458,7 @@ public class StepService {
                 .when()
                 .put("cards/" + card.getId() + "/actions/" + commentId + "/comments")
                 .then()
-                .statusCode(200)
+                .spec(response)
                 .body("data.text", is(text));
     }
 
@@ -469,7 +474,7 @@ public class StepService {
                 .when()
                 .delete("cards/" + card.getId() + "/actions/" + commentId + "/comments")
                 .then()
-                .statusCode(200);
+                .spec(response);
     }
 
     /**
@@ -497,7 +502,8 @@ public class StepService {
                 .post("organizations")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
+                .body(matchesJsonSchemaInClasspath("schemas/createOrganisationSchema.json"))
                 .extract().body().as(Organisation.class);
     }
 
@@ -517,7 +523,7 @@ public class StepService {
                 .put("organizations/" + organisation.getId())
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .extract().body().as(Organisation.class);
     }
 
@@ -534,15 +540,14 @@ public class StepService {
                 .put("organizations/" + organisation.getId())
                 .then()
                 .log().body()
-                .statusCode(200);
+                .spec(response);
 
         given()
                 .spec(request)
                 .when()
                 .delete("organizations/" + organisation.getId())
                 .then()
-                .log().body()
-                .statusCode(200);
+                .spec(response);
     }
 
     /**
@@ -575,7 +580,7 @@ public class StepService {
                 .put("organizations/" + organisation.getId() + "/members")
                 .then()
                 .log().body()
-                .statusCode(200);
+                .spec(response);
     }
 
     /**
@@ -591,7 +596,7 @@ public class StepService {
                 .get("organizations/" + organisation.getId() + "/members")
                 .then()
                 .log().body()
-                .statusCode(200)
+                .spec(response)
                 .body("findAll{it}.fullName.flatten()", hasItem(fullName));
     }
 }

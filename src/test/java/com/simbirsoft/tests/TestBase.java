@@ -13,9 +13,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestBase {
     public static Faker faker = new Faker();
-    public static StepService stepService = new StepService();
-    public static Board board = new Board();
-    public static Card card = new Card();
+    protected static StepService stepService = new StepService();
+    protected static Board board = new Board();
+    protected static Card card = new Card();
 
     @BeforeAll
     static void createBoardAndCard() {
