@@ -335,7 +335,7 @@ public class StepService {
     }
 
     /**
-     * Добалвение пункта в чек-лист
+     * Добавление пункта в чек-лист
      * @param checkList - чек-лист, для которого необходимо добавить пункт
      * @param name - название пункта
      * @return - пункт чек-листа
@@ -369,6 +369,13 @@ public class StepService {
                 .extract().body().as(CheckList.class);
     }
 
+    /**
+     * Изменение статуса пункта чек-листа на Выполнено
+     * @param card - карточка, в которой находится чек-лист
+     * @param checkItem - пункт чек-листа, который необходимо изменить
+     * @return измененный пункт чек-листа
+     */
+    @Step("Изменение статуса пункта чек-листа на Выполнено")
     public CheckItem markCheckItemAsComplete(Card card, CheckItem checkItem) {
         return given()
                 .spec(request)
@@ -378,10 +385,13 @@ public class StepService {
                 .then()
                 .statusCode(200)
                 .extract().body().as(CheckItem.class);
-
-
     }
 
+    /**
+     * Удаление пункта чек-листа
+     * @param checkItem - пункт чек-листа, который необходимо удалить
+     */
+    @Step("Удаление пункта чек-листа")
     public void deleteCheckItem(CheckItem checkItem) {
         given()
                 .spec(request)
@@ -391,6 +401,13 @@ public class StepService {
                 .statusCode(200);
     }
 
+    /**
+     * Добавление комментария к карточке
+     * @param card - карточка, для которой необходимо добавить комментарий
+     * @param text - текст комментария
+     * @return - идентификатор созданного комментария
+     */
+    @Step("Добавление комментария к карточке")
     public String addCommentToCard(Card card, String text) {
         return given()
                 .spec(request)
@@ -405,6 +422,12 @@ public class StepService {
                 .path("id");
     }
 
+    /**
+     * Получение количества комментариев у карточки
+     * @param card - карточка, у которой необходимо получить количество комментариев
+     * @return - количество комментариев у карточки
+     */
+    @Step("Получение количества комментариев у карточки")
     public int getCommentsCountInCard(Card card) {
         return given()
                 .spec(request)
@@ -416,6 +439,13 @@ public class StepService {
                 .path("badges.comments");
     }
 
+    /**
+     * Изменение комментария у карточки
+     * @param card - карточка, у которой необходимо изменить комментарий
+     * @param commentId - идентификатор комментария
+     * @param text - текст комментария
+     */
+    @Step("Изменение комментария у карточки")
     public void updateCommentInCard(Card card, String commentId, String text) {
         given()
                 .spec(request)
@@ -427,6 +457,12 @@ public class StepService {
                 .body("data.text", is(text));
     }
 
+    /**
+     * Удаление комментария к карточке
+     * @param card - карточка, у которой необходимо удалить комментарий
+     * @param commentId - идентификатор комментария для удаления
+     */
+    @Step("Удаление комментария к карточке")
     public void deleteCommentInCard(Card card, String commentId) {
         given()
                 .spec(request)
@@ -436,10 +472,23 @@ public class StepService {
                 .statusCode(200);
     }
 
+    /**
+     * Изменение статуса карточки (Нужно сделать, В процессе, Выполнено и т.д.)
+     * @param card - карточка, у которой необходимо изменить статус
+     * @param idStatus - идентификатор статуса
+     * @return - измененная карточка
+     */
+    @Step("Изменение статуса у карточки")
     public Card moveCardToStatus(Card card, String idStatus) {
         return updateCard(card, "idList", idStatus);
     }
 
+    /**
+     * Создание организации (рабочего пространства)
+     * @param displayName - отображаемое название
+     * @return - созданная организация
+     */
+    @Step("Создание организации")
     public Organisation createOrganisation(String displayName) {
         return given()
                 .spec(request)
@@ -452,6 +501,14 @@ public class StepService {
                 .extract().body().as(Organisation.class);
     }
 
+    /**
+     * Изменение данных организации (рабочего пространства)
+     * @param organisation - организация, которую необходимо изменить
+     * @param parameter - название параметра
+     * @param value - значение параметра
+     * @return - измененная организация
+     */
+    @Step("Изменение данных организации")
     public Organisation updateOrganisation(Organisation organisation, String parameter, String value) {
         return given()
                 .spec(request)
@@ -464,6 +521,11 @@ public class StepService {
                 .extract().body().as(Organisation.class);
     }
 
+    /**
+     * Удаление организации (рабочего пространства)
+     * @param organisation - организация, которую необходимо удалить
+     */
+    @Step("Удаление организации")
     public void deleteOrganisation(Organisation organisation) {
         given()
                 .spec(request)
@@ -483,17 +545,11 @@ public class StepService {
                 .statusCode(200);
     }
 
-    public Organisation getOrganisation(Organisation organisation) {
-        return given()
-                .spec(request)
-                .when()
-                .get("organizations/" + organisation.getId())
-                .then()
-                .log().body()
-                .statusCode(200)
-                .extract().body().as(Organisation.class);
-    }
-
+    /**
+     * Получение данных организации, в случае если организация не найдена (проверка 404 статуса)
+     * @param organisation - организация
+     */
+    @Step("Получение данных по несуществующей организации")
     public void getOrganisationNotFound(Organisation organisation) {
         given()
                 .spec(request)
@@ -503,6 +559,13 @@ public class StepService {
                 .statusCode(404);
     }
 
+    /**
+     * Добавление участника к организации
+     * @param organisation - организация, для которой необходимо добавить участника
+     * @param email - email участника
+     * @param fullName - имя участника
+     */
+    @Step("Добавление участника к организации")
     public void addMemberToOrganisation(Organisation organisation, String email, String fullName) {
         given()
                 .spec(request)
@@ -515,6 +578,12 @@ public class StepService {
                 .statusCode(200);
     }
 
+    /**
+     * Проверка нахождения участника в организации
+     * @param organisation - организация, в которой должен находиться участник
+     * @param fullName - имя участника
+     */
+    @Step("Проверка нахождения участника в организации")
     public void checkMemberInOrganisation(Organisation organisation, String fullName) {
         given()
                 .spec(request)
