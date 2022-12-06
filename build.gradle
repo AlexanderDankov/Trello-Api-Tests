@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'io.qameta.allure' version '2.10.0'
+    id "io.freefair.lombok" version "6.5.1"
+}
+
+group 'com.simbirsoft'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+def junitVersion = "5.9.0",
+    allureVersion = '2.20.0'
+
+allure {
+    version = allureVersion
+    adapter.autoconfigure
+    adapter.aspectjWeaver
+    useJUnit5 {
+        version = allureVersion
+    }
+}
+
+dependencies {
+    testImplementation (
+            "org.junit.jupiter:junit-jupiter:$junitVersion",
+            'io.rest-assured:rest-assured:5.3.0',
+            'io.rest-assured:json-schema-validator:5.3.0',
+            "io.qameta.allure:allure-rest-assured:$allureVersion",
+            'org.assertj:assertj-core:3.23.1',
+            'com.github.javafaker:javafaker:1.0.2',
+            'com.fasterxml.jackson.core:jackson-databind:2.14.0',
+            "com.googlecode.json-simple:json-simple:1.1.1")
+    testRuntimeOnly (
+            "org.junit.jupiter:junit-jupiter-engine:$junitVersion",
+            'org.projectlombok:lombok:1.18.24')
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+tasks.withType(Test) {
+    systemProperties(System.getProperties())
+    useJUnitPlatform()
+
+    testLogging {
+        lifecycle {
+//            events "started", "failed"
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+}
