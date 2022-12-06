@@ -57,4 +57,23 @@ tasks.withType(Test) {
             exceptionFormat "short"
         }
     }
+
+}
+
+task boardTest(type: Test) {
+    useJUnitPlatform{
+        includeTags "Board"
+    }
+}
+
+task cardTest(type: Test) {
+    useJUnitPlatform{
+        includeTags "Card"
+    }
+}
+
+task organisationTest(type: Test) {
+    useJUnitPlatform{
+        includeTags "Organisation"
+    }
 }
