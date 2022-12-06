@@ -60,19 +60,19 @@ tasks.withType(Test) {
 
 }
 
-task boardTest(type: Test) {
+task board_test(type: Test) {
     useJUnitPlatform{
         includeTags "Board"
     }
 }
 
-task cardTest(type: Test) {
+task card_test(type: Test) {
     useJUnitPlatform{
         includeTags "Card"
     }
 }
 
-task organisationTest(type: Test) {
+task organisation_test(type: Test) {
     useJUnitPlatform{
         includeTags "Organisation"
     }
