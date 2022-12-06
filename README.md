@@ -1,4 +1,4 @@
-<img src="images/Trello-logo.png" width=200 height=150>
+<img src="images/Trello-logo.png" width=200 height=100>
 
 
 
